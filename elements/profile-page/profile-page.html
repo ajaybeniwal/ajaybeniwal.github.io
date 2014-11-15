@@ -1,0 +1,98 @@
+<link rel="import" href="../../bower_components/core-header-panel/core-header-panel.html">
+<link rel="import" href="../../bower_components/core-ajax/core-ajax.html">
+<link rel="import" href="../../elements/site-navigation/site-navigation.html">
+<polymer-element name="profile-page" attributes="">
+<template>
+<style>
+core-header-panel {
+  height: 100%;
+}
+core-toolbar{
+  background-color: #ffeb3b;
+  color: black;
+}
+.content{
+	margin-top: 10px;
+}
+ .card {
+        min-width: 300px;
+        max-width: 400px;
+        padding:1.5rem;
+        box-shadow:0 1px 2px #aaa;
+        background:white;
+        margin:1rem 1rem 1rem;
+        border-radius:3px;
+        user-select:none;
+        clear: both;
+      }
+
+     
+
+      .map {
+        background: whitesmoke;
+        margin: .5rem -1.5rem 0 -1.5rem;
+        padding: 0.5rem;
+      }
+
+      h1 {
+        font-size:2rem;
+        font-weight:200;
+        margin: 0px;
+      }
+
+      h1 strong {
+        font-weight:300;
+        color:#539D00;
+      }
+
+      h2 {
+        font-size:.9rem;
+        line-height:2.5;
+        color:gray;
+        font-weight:400;
+      }
+</style>
+<core-ajax
+    auto
+    url="https://www.googleapis.com/plus/v1/people/me"
+    headers='{"Authorization": "Bearer {{acessToken}}"}'
+    on-core-response="{{handleResponse}}" handleAs="json"></core-ajax>
+<core-header-panel >
+<site-navigation class="core-header" acessToken="{{acessToken}}"></site-navigation>
+<div class="content" horizontal center-justified layout>
+<template id="profile" bind="{{ profile }}">
+    <div class="card">
+        <h1><strong>{{displayName}}</strong></h1>
+        <div class="map">
+          <p>
+              <strong>Gender</strong> {{gender}}
+          </p>
+          <p>
+              <strong>Avatar</strong>
+              <p>
+                  <img src="{{image.url}}" />
+              </p>
+          </p>
+          <p>
+              <strong>G+ URL</strong> <a href="{{url}}">{{url}}</a>
+          </p>
+        </div>
+    </div>
+    </template>
+</div>
+</core-header-panel>
+</template>
+ <script>
+    (function () {
+      'use strict';
+	 	Polymer({
+	 		 handleResponse:function(e){
+	 		 	var t = this.$.profile;
+                t.model = {};
+                t.model.profile = e.detail.response;
+	 		 }
+      	});
+
+    })();
+  </script>
+</polymer-element>

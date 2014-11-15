@@ -1,0 +1,90 @@
+	<link rel="import" href="../../bower_components/core-header-panel/core-header-panel.html">
+  <link rel="import" href="../../bower_components/core-toolbar/core-toolbar.html">
+  <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
+  <link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
+  <link rel="import" href="../../bower_components/core-icons/core-icons.html">
+  <link rel="import" href="../../bower_components/core-icons/maps-icons.html">
+  <link rel="import" href="../../bower_components/core-item/core-item.html">
+  <link rel="import" href="../../bower_components/core-icons/social-icons.html">
+  <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+  <link rel="import" href="../../bower_components/paper-menu-button/paper-menu-button.html">
+  <link rel="import" href="../../bower_components/paper-item/paper-item.html">
+  <link rel="import" href="../../bower_components/google-signin/google-signin.html">
+  <link rel="import" href="../../bower_components/core-localstorage/core-localstorage.html">
+  <link rel="import" href="../../bower_components/core-media-query/core-media-query.html">
+  <link rel="import" href="../../bower_components/core-localstorage/core-localstorage.html">
+  <link rel="import" href="../../bower_components/pushstate-anchor/pushstate-anchor.html">
+<polymer-element name="site-navigation" attributes="acessToken">
+  <template>
+    <link rel="stylesheet" href="site-navigation.css" shim-shadowdom>
+    <core-localstorage name="my-app-storage" id="localstorage" value="{{acessToken}}"></core-localstorage>
+    <core-media-query query="max-width:800px" queryMatches="{{phoneScreen}}"></core-media-query>
+  <core-toolbar class="medium-tall">
+  <core-item  icon="polymer" label="Homes121"></core-item>
+  <div flex>
+  </div>
+  <paper-menu-button icon="more-vert" halign="right">
+  <a is="pushstate-anchor" href="/profile"><paper-item label="My Account" icon="perm-identity"></paper-item></a>
+  <paper-item label="Logout" icon="drive-script"></paper-item>
+  </paper-menu-button>
+  <google-signin clientId="389819363610-19tn05jor575uqir373fv26fekqh504b.apps.googleusercontent.com" scopes="https://www.googleapis.com/auth/tasks" on-google-signin-success="{{signinSuccess}}" hidden?="{{isAuthenticated}}"></google-signin>
+   <template if="{{phoneScreen}}">
+    <paper-menu-button icon="menu" halign="right">
+    <paper-item icon="social:notifications" label="Notices"></paper-item>
+    <paper-item icon="assignment" label="Discussion"></paper-item>
+    <paper-item icon="announcement" label="Complaints"></paper-item>
+    <paper-item  icon="maps:local-offer" label="Services"></paper-item>
+    <paper-item icon="maps:directions-car" label="Car Pools"></paper-item>
+    <paper-item icon="payment" label="Raise Funds"></paper-item>
+  </paper-menu-button>
+   <div id="searchmobile" class="bottom" show>
+   <paper-icon-button icon="search" role="button" tabindex="0" aria-label="search" >
+      </paper-icon-button>
+      <input type="search" id="input" autocomplete="off" placeholder="Enter Flat No to search">
+      </div>
+   </template>
+   <template if="{{!phoneScreen}}">
+      <paper-tabs selected="all" id="tabs" class="bottom" role="tablist">
+      <paper-tab name="all" ><core-icon icon="home"></core-icon> Home</paper-tab>
+      <paper-tab name="abc" ><core-icon icon="social:notifications"></core-icon> Notices</paper-tab>
+      <paper-tab name="dis" ><core-icon icon="assignment"></core-icon> Discussion</paper-tab>
+        <paper-tab name="comp" ><core-icon icon="announcement"></core-icon> Complaints</paper-tab>
+        <paper-tab name="service" ><core-icon icon="maps:local-offer"></core-icon> Services</paper-tab>
+        <paper-tab name="pools" ><core-icon icon="maps:directions-car"></core-icon> Car Pools</paper-tab>
+        <paper-tab name="funds" ><core-icon icon="payment"></core-icon> Raise Funds</paper-tab>
+      </paper-tabs>
+    <span flex class="bottom"></span>
+      <div id="search" class="bottom"><paper-icon-button icon="search" role="button" tabindex="0" aria-label="search">
+      </paper-icon-button>
+      <input type="search" id="input" on-keyup="{{ onKeyPress }}" autocomplete="off" placeholder="Enter Flat Number to search">
+      </div>
+      </template>
+  </core-toolbar>
+
+  </template>
+  <script>
+    (function () {
+      'use strict';
+
+      Polymer({
+        phoneScreen:false,
+        publish:{
+          isAuthenticated: {value:false,reflect:true},
+        },
+        observe: {
+        acessToken: 'validate',
+        },
+        signinSuccess:function(e){
+          var accessToken=e.detail.result.access_token;
+          this.$.localstorage.value=accessToken;
+        },
+        validate:function(oldValue,newValue){
+          if(newValue){
+            this.isAuthenticated=true;
+          }
+        }  
+      });
+
+    })();
+  </script>
+</polymer-element>
